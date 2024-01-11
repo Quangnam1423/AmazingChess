@@ -1,19 +1,20 @@
 #include "square.h"
 
-square::square(sf::Vector2f position, sf::Vector2f& size_square)
+square::square(sf::Vector2f position, float &size_square)
 {
+	//get the position for thr square on the monitor
 	this->position = position;
-	this->size_square = size_square;
-	//set the size of the square
-	this->rectangle.setSize(this->size_square);
-	this->highlight_circle_shape.setRadius(this->size_square.x / 4);
-	sf::Vector2f temp(this->position.x + this->size_square.x, this->position.x + this->size_square.x);
-	this->highlight_circle_shape.setPosition(temp);
-	
 	if ((int)(this->position.x + this->position.y) % 2 == 0)
 		this->color = "white";
 	else
 		this->color = "black";
+	this->size_square = size_square;
+	this->size = sf::Vector2f(this->size_square, this->size_square);
+	this->rectangle.setSize(this->size);
+	this->rectangle.setPosition(this->position.x * this->size_square , this->position.y * this->size_square);
+	sf::Vector2f temp(this->position.x + this->size.x, this->position.x + this->size.x);
+
+	// config the started condition of the game
 	this->checkingmate = false;
 	this->highlight = false;
 }
@@ -34,21 +35,16 @@ void square::fill_highlight()
 
 void square::print_square(sf::RenderWindow& window)
 {
-	if (this->checkingmate == true)
-	{
-		rectangle.setFillColor(sf::Color::Red);
-		window.draw(this->rectangle);
-	}
+
+	if (this->color == "black")
+		rectangle.setFillColor(sf::Color(153,204,0));
 	else
+		rectangle.setFillColor(sf::Color(255,255,204));
+	window.draw(this->rectangle);
+
+
+	if (this->highlight == true)
 	{
-		if (color == "black")
-			rectangle.setFillColor(sf::Color::Black);
-		else
-			rectangle.setFillColor(sf::Color::White);
-		window.draw(this->rectangle);
-		if (this->highlight == true)
-		{
-			window.draw(highlight_circle_shape);
-		}
+		window.draw(highlight_circle_shape);
 	}
 }
