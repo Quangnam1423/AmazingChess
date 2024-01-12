@@ -26,4 +26,6 @@ private:
 	std::vector<square*> squares;
 };
 
+std::string get_notation(int i);
+
 #endif

@@ -24,12 +24,18 @@
     <ClCompile Include="GameEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="piece.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="square.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="piece.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

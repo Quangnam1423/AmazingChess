@@ -16,6 +16,7 @@ float size_square = screen_height / 8;
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(screen_width , screen_height), "AmaZing Chess");
+    window.setFramerateLimit(60);
     GameEngine newgame(size_square, true);
     while (window.isOpen())
     {
