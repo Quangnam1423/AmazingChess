@@ -27,7 +27,7 @@ void piece::setPosition(int x, int y)
 	this->sprite.setPosition(x * this->size, y * this->size);
 }
 
-void piece::setPosition(sf::Vector2i const newPosition)
+void piece::setPosition(sf::Vector2i newPosition)
 {
-	this->sprite.setPosition((float) newPosition.x , (float) newPosition.y);
+	this->sprite.setPosition(newPosition.x * this->size ,newPosition.y * this->size);
 }

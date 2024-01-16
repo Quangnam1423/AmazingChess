@@ -31,7 +31,18 @@ square::~square()
 
 void square::print(sf::RenderWindow& window)
 {
-
+	if (this->color == "black")
+		rectangle.setFillColor(sf::Color(153, 204, 0));
+	else
+		rectangle.setFillColor(sf::Color(255, 255, 204));
+	//if (this->highlight == true)
+	//{
+	//	window.draw(highlight_circle_shape);
+	//}
+	//if (this->current_piece != NULL)
+	//{
+	//	this->current_piece->Piece_print(window);
+	//}
 	window.draw(this->rectangle);
 	if (this->currentPiece != nullptr)
 	{
@@ -52,6 +63,7 @@ piece* square::getCurrentPiece()
 {
 	if (this->currentPiece != nullptr)
 		return this->currentPiece;
+	else return nullptr;
 }
 
 sf::Vector2i square::getCoordinate()

@@ -2,9 +2,11 @@
 #include "piece.h"
 #include <Graphics.hpp>
 #include <math.h>
+#include <iostream>
 
 GameEngine::GameEngine(float size_square, bool go_first)
 {
+	this->square_size = size_square;
 	this->turn = go_first;
 	this->endgame = false;
 	for (int i = 0 ; i < 8 ; i += 1)
@@ -12,11 +14,9 @@ GameEngine::GameEngine(float size_square, bool go_first)
 		{
 			std::string notation = get_notation(config[i][j]);
 			sf::Vector2i temp(j,i);
-			piece* ptr_piece;
+			piece* ptr_piece = nullptr;
 			if (notation != "null")
 				ptr_piece = new piece(temp , size_square ,  notation);
-			else
-				ptr_piece = nullptr;
 			this->squares.push_back(new square(temp, size_square , ptr_piece));
 		}
 }
@@ -37,8 +37,9 @@ void GameEngine::Print(sf::RenderWindow& window)
 
 square* GameEngine::getSquareFromMouse(sf::Vector2i mousePosition)
 {
-	int x = (int) mousePosition.y / this->square_size;
-	int y = (int) mousePosition.x / this->square_size;
+	int x = (int) mousePosition.x / this->square_size;
+	int y = (int) mousePosition.y / this->square_size;
+	std::cout << x << " " << y << std::endl;
 	for (square* ptr_square : squares)
 	{
 		sf::Vector2i temp = ptr_square->getCoordinate();
@@ -50,7 +51,8 @@ square* GameEngine::getSquareFromMouse(sf::Vector2i mousePosition)
 	return nullptr;
 }
 
-void GameEngine::Completion(square* ptrSelectedSquare, square* ptrMoveSquare , piece* ptrSelectedPiece)
+
+void GameEngine::Completion(square* &ptrSelectedSquare, square* &ptrMoveSquare , piece* &ptrSelectedPiece)
 {
 	ptrSelectedSquare->setCurrentPiece(ptrMoveSquare->getCurrentPiece());
 	ptrMoveSquare->setCurrentPiece(ptrSelectedPiece);

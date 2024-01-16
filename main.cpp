@@ -1,6 +1,7 @@
 #include <Graphics.hpp>
 #include <Audio.hpp>
 #include <Network.hpp>
+#include <iostream>
 #include "square.h"
 #include "GameEngine.h"
 
@@ -19,8 +20,8 @@ int main()
     window.setFramerateLimit(60);
     GameEngine game(size_square, true);
 
-    bool getPiece = false;
-    square* ptrSelectedSquare = nullptr;
+    bool getPiece = false , selectingMoving = false;
+    square* ptrSelectedSquare = nullptr , * ptrMovingSquare = nullptr;
     piece* ptrSelectedPiece = nullptr;
 
     while (window.isOpen())
@@ -30,28 +31,31 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
-            else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && getPiece == false)
+            else if (event.type == sf::Event::MouseButtonPressed)
             {
-                ptrSelectedSquare = game.getSquareFromMouse(sf::Mouse::getPosition(window));
-                ptrSelectedPiece = ptrSelectedSquare->getCurrentPiece();
-                if (ptrSelectedPiece == nullptr)
+                std::cout << getPiece << std::endl;
+                if (getPiece == false)
                 {
-                    ptrSelectedPiece = nullptr;
-                    ptrSelectedSquare = nullptr;
+                    ptrSelectedSquare = game.getSquareFromMouse(sf::Mouse::getPosition(window));
+                    if (ptrSelectedSquare != nullptr)
+                    {
+                        ptrSelectedPiece = ptrSelectedSquare->getCurrentPiece();
+                        getPiece = true;
+                    }
+                    else
+                    {
+                        ptrSelectedSquare = nullptr;
+                    }
                 }
                 else
-                    getPiece = true;
-            }
-            else if (event.type == sf::Event::MouseButtonReleased && getPiece == true)
-            {
-                square* ptrMoveSquare = game.getSquareFromMouse(sf::Mouse::getPosition(window));
-                if (ptrMoveSquare != ptrSelectedSquare)
                 {
-                    game.Completion(ptrSelectedSquare, ptrMoveSquare , ptrSelectedPiece);
+                    ptrMovingSquare = game.getSquareFromMouse(sf::Mouse::getPosition(window));
+                    if (ptrMovingSquare != nullptr && ptrMovingSquare != ptrSelectedSquare)
+                    {
+                        game.Completion(ptrSelectedSquare, ptrMovingSquare, ptrSelectedPiece);
+                    }
+                    getPiece = false;
                 }
-                ptrSelectedPiece = nullptr;
-                ptrSelectedSquare = nullptr;
-                getPiece = false;
             }
         }
 
