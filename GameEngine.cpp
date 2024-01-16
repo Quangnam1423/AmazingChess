@@ -11,12 +11,12 @@ GameEngine::GameEngine(float size_square, bool go_first)
 		for (int j = 0 ; j < 8 ; j += 1)
 		{
 			std::string notation = get_notation(config[i][j]);
-			sf::Vector2f temp((float)j, (float)i);
+			sf::Vector2i temp(j,i);
 			piece* ptr_piece;
 			if (notation != "null")
 				ptr_piece = new piece(temp , size_square ,  notation);
 			else
-				ptr_piece = NULL;
+				ptr_piece = nullptr;
 			this->squares.push_back(new square(temp, size_square , ptr_piece));
 		}
 }
@@ -30,8 +30,31 @@ void GameEngine::Print(sf::RenderWindow& window)
 {
 	for (square* x : this->squares)
 	{
-		x->print_square(window);
+		x->print(window);
 	}
+	return;
+}
+
+square* GameEngine::getSquareFromMouse(sf::Vector2i mousePosition)
+{
+	int x = (int) mousePosition.y / this->square_size;
+	int y = (int) mousePosition.x / this->square_size;
+	for (square* ptr_square : squares)
+	{
+		sf::Vector2i temp = ptr_square->getCoordinate();
+		if (temp.x == x && temp.y == y)
+		{
+			return ptr_square;
+		}
+	}
+	return nullptr;
+}
+
+void GameEngine::Completion(square* ptrSelectedSquare, square* ptrMoveSquare , piece* ptrSelectedPiece)
+{
+	ptrSelectedSquare->setCurrentPiece(ptrMoveSquare->getCurrentPiece());
+	ptrMoveSquare->setCurrentPiece(ptrSelectedPiece);
+	return;
 }
 
 std::string get_notation(int i)

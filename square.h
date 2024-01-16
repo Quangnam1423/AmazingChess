@@ -7,19 +7,24 @@
 class square
 {
 public:
-	square(sf::Vector2f position , float &size_square , piece* current_piece);
+	square(sf::Vector2i coordintae , float &size_square , piece* current_piece);
+	~square();
 	void fill_highlight();
 	void fill_checkingmate();
-	void print_square(sf::RenderWindow& window);
+	void print(sf::RenderWindow& window);
+	void setCurrentPiece(piece* newPiece);
+	piece* getCurrentPiece();
+	sf::Vector2i getCoordinate();
 private:
-	piece* current_piece;
-	sf::Vector2f position , size;
+	piece* currentPiece;
+	sf::Vector2i coordinate;
+	sf::Vector2f size;
 	float size_square;
 	std::string color;
-	bool highlight;
-	bool checkingmate;
 	sf::RectangleShape rectangle;
 	sf::CircleShape highlight_circle_shape;
+
+	bool checkingmate, highlight;
 };
 
 #endif

@@ -7,12 +7,13 @@
 class piece
 {
 public:
-	piece(sf::Vector2f position , float size_piece , std::string notation);
+	piece(sf::Vector2i coordinate , float size_piece , std::string notation);
 	~piece();
-	void Piece_print(sf::RenderWindow& window);
+	void print(sf::RenderWindow& window);
+	void setPosition(int x, int y);
+	void setPosition(sf::Vector2i const newPosition);
 private:
-	sf::Vector2f position;
-	float size_piece;
+	float size;
 	sf::Texture texture;
 	sf::Sprite sprite;
 };

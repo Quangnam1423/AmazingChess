@@ -17,7 +17,12 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(screen_width , screen_height), "AmaZing Chess");
     window.setFramerateLimit(60);
-    GameEngine newgame(size_square, true);
+    GameEngine game(size_square, true);
+
+    bool getPiece = false;
+    square* ptrSelectedSquare = nullptr;
+    piece* ptrSelectedPiece = nullptr;
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -25,10 +30,33 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && getPiece == false)
+            {
+                ptrSelectedSquare = game.getSquareFromMouse(sf::Mouse::getPosition(window));
+                ptrSelectedPiece = ptrSelectedSquare->getCurrentPiece();
+                if (ptrSelectedPiece == nullptr)
+                {
+                    ptrSelectedPiece = nullptr;
+                    ptrSelectedSquare = nullptr;
+                }
+                else
+                    getPiece = true;
+            }
+            else if (event.type == sf::Event::MouseButtonReleased && getPiece == true)
+            {
+                square* ptrMoveSquare = game.getSquareFromMouse(sf::Mouse::getPosition(window));
+                if (ptrMoveSquare != ptrSelectedSquare)
+                {
+                    game.Completion(ptrSelectedSquare, ptrMoveSquare , ptrSelectedPiece);
+                }
+                ptrSelectedPiece = nullptr;
+                ptrSelectedSquare = nullptr;
+                getPiece = false;
+            }
         }
 
         window.clear();
-        newgame.Print(window);
+        game.Print(window);
         window.display();
     }
 
