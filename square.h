@@ -1,30 +1,29 @@
 #pragma once
 #ifndef SQUARE_H
 #define SQUARE_H
-#include "piece.h"
+#include "Piece.h"
 #include <Graphics.hpp>
 
-class square
+class Square
 {
 public:
-	square(sf::Vector2i coordintae , float &size_square , piece* current_piece);
-	~square();
-	void fill_highlight();
-	void fill_checkingmate();
-	void print(sf::RenderWindow& window);
-	void setCurrentPiece(piece* newPiece);
-	piece* getCurrentPiece();
+	Square(Piece* piece , sf::Vector2i coordinate ,float size);
+	~Square();
+	Piece* getPiece();
+	void setPiece(Piece* newPiece);
+	void setCoordinate(sf::Vector2i coordinate);
 	sf::Vector2i getCoordinate();
+	void print(sf::RenderWindow& window);
+
 private:
-	piece* currentPiece;
+	Piece* currentPiece;
 	sf::Vector2i coordinate;
-	sf::Vector2f size;
-	float size_square;
+	float size;
 	std::string color;
 	sf::RectangleShape rectangle;
 	sf::CircleShape highlight_circle_shape;
 
-	bool checkingmate, highlight;
+	bool selected , highlight;
 };
 
 #endif
