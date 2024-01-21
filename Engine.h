@@ -4,20 +4,25 @@
 #define ENGINE_H
 
 #include "Square.h"
-#include "Piece.h"
+#include "Object.h"
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
+#include <unordered_set>
 
 class Engine
 {
 public:
-	Engine();
-	//~Engine();
-	void Init(char turn , float sizeSquare);
-	//void getSquareFromMouse(sf::Vector2i MousePosition);
-	//void Completion(sf::Vector2i MousePosition);
-	//void setupBoard();
-	//sf::Texture* getTexture(std::string notation);	
+	Engine(char turn, float sizeSquare);
+	~Engine();
+	Square* getSquareFromMouse(sf::Vector2i MousePosition);
+	Square* getSquareFromCoord(sf::Vector2i Coordinate);
+	bool Is_In_Check();
+	bool checkValidMove(sf::Vector2i oldSquare, sf::Vector2i newSquare);
+	std::vector<sf::Vector2i> getValidMove();
+	void handleClicked(sf::Vector2i MousePosition);
+	char getTurn();
+	void Completion(Square* clickedSquare);
+	void fillHighlight(bool value);
 	std::unordered_map<std::string, sf::Texture*> map_Texture;
 	std::string paths[6] = { "r" , "n" , "b" , "k" , "q" , "p" };
 	std::string config[8][8] = {
@@ -30,16 +35,16 @@ public:
 		{"wp" , "wp" , "wp" , "wp" , "wp" , "wp" , "wp" , "wp"},
 		{"wr" , "wn" , "wb" , "wk" , "wq" , "wb" , "wn" , "wr"}
 	};
+	void print(sf::RenderWindow& window);
 private:
 
-	std::string turn;
-	Square* ptrSelectedSquare , ptrMoveSquare;
+	Square* selectedSquare;
 	Piece* selectedPiece;
+	char turn;
+	std::vector<sf::Vector2i> PossibleMove;
 	std::vector<Square*> Squares;
+	sf::Vector2i BlackKingCoordinate, WhiteKingCoordinate;
 	bool checkmate;
-	bool isInCheckMate;
-	bool pawnAdvancement;
-
 	float SquareSize;
 };
 

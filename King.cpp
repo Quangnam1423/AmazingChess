@@ -1,20 +1,25 @@
-#include "Knight.h"
+#include "King.h"
 
+King::King(std::string notation, sf::Vector2i coordinate, float size, sf::Texture* texture)
+	: Piece(notation, coordinate, size, texture)
+{
 
-std::vector<sf::Vector2i> Knight::getPossibleMove(std::string config[][8])
+}
+
+std::vector<sf::Vector2i> King::getPossibleMove(std::string config[][8])
 {
 	std::vector<sf::Vector2i> output;
 	int x = this->coordinate.x;
 	int y = this->coordinate.y;
 	int move[8][2] = {
-		{-2 , -1},
-		{-1 , -2},
-		{1 , -2},
-		{2 , -1},
-		{2 , 1},
-		{1 , 2},
-		{-1 , 2},
-		{-2 , 1}
+		{-1 , -1},
+		{0 , -1},
+		{1 , -1},
+		{1 , 0},
+		{1 , 1},
+		{0 , 1},
+		{-1 , 1},
+		{-1 , 0}
 	};
 	for (int i = 0; i < 8; i++)
 	{

@@ -1,12 +1,13 @@
 #pragma once
 #ifndef SQUARE_H
 #define SQUARE_H
-#include "Piece.h"
+#include "Object.h"
 #include <Graphics.hpp>
 
 class Square
 {
 public:
+	Square();
 	Square(Piece* piece , sf::Vector2i coordinate ,float size);
 	~Square();
 	Piece* getPiece();
@@ -14,6 +15,7 @@ public:
 	void setCoordinate(sf::Vector2i coordinate);
 	sf::Vector2i getCoordinate();
 	void print(sf::RenderWindow& window);
+	void markHighlight(bool value);
 
 private:
 	Piece* currentPiece;

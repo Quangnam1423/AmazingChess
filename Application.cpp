@@ -4,14 +4,16 @@
 Application::Application()
 {
 
-	this->ptrgetTexture = &Application::getTexture;
-	this->game;
 }
 
 void Application::run()
 {
 
 	sf::RenderWindow window(sf::VideoMode(this->Height, this->Width), "Amazing Chess");
+
+	Engine* game = new Engine('w', this->SquareSize);
+
+	window.setFramerateLimit(60);
 
 	while (window.isOpen())
 	{
@@ -25,13 +27,14 @@ void Application::run()
 			
 			else if (event.type == sf::Event::MouseButtonPressed)
 			{
-			
+				game->handleClicked(sf::Mouse::getPosition(window));
 			}
 		}
-	}
-}
 
-sf::Texture* Application::getTexture(std::string notation)
-{
-	return this->map_Texture[notation];
+		window.clear();
+
+		game->print(window);
+
+		window.display();
+	}
 }

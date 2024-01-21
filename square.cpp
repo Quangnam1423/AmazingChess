@@ -1,10 +1,15 @@
 #include "Square.h"
 
+Square::Square()
+{
+
+}
+
 Square::Square(Piece* piece, sf::Vector2i coordinate, float size)
 {
 	this->currentPiece = piece;
 	this->coordinate = coordinate;
-	if (this->coordinate.x + this->coordinate.y % 2 == 0)
+	if ((this->coordinate.x + this->coordinate.y) % 2 == 0)
 	{
 		this->color = "white";
 	}
@@ -14,6 +19,10 @@ Square::Square(Piece* piece, sf::Vector2i coordinate, float size)
 	this->rectangle.setPosition(this->coordinate.x * this->size, this->coordinate.y * this->size);
 	this->highlight = false;
 	this->selected = false;
+	this->highlight_circle_shape.setRadius(this->size / 4);
+	this->highlight_circle_shape.setOrigin(this->size / 4, this->size / 4);
+	this->highlight_circle_shape.setPosition(this->coordinate.x * this->size + this->size / 2,this->coordinate.y * this->size + this->size / 2);
+	this->highlight_circle_shape.setFillColor(sf::Color::Magenta);
 }
 
 Square::~Square()
@@ -37,7 +46,8 @@ Piece* Square::getPiece()
 void Square::setPiece(Piece* newPiece)
 {
 	this->currentPiece = newPiece;
-	newPiece->setCoordinate(this->coordinate);
+	if (this->currentPiece != nullptr)
+		newPiece->setCoordinate(this->coordinate);
 }
 
 void Square::setCoordinate(sf::Vector2i coordinate)
@@ -48,9 +58,25 @@ void Square::setCoordinate(sf::Vector2i coordinate)
 
 void Square::print(sf::RenderWindow& window)
 {
+	if (this->color == "black")
+		rectangle.setFillColor(sf::Color(153, 204, 0));
+	else
+		rectangle.setFillColor(sf::Color(255, 255, 204));
 	window.draw(this->rectangle);
+	if (this->highlight == true)
+	{
+		window.draw(highlight_circle_shape);
+	}
 	if (this->selected == false && this->currentPiece != nullptr)
 	{
 		this->currentPiece->print(window);
 	}
+}
+
+void Square::markHighlight(bool value)
+{
+	if (value == true)
+		this->highlight = true;
+	else this->highlight = false;
+	return;
 }
