@@ -1,4 +1,5 @@
 #include "Application.h"
+#include <iostream>
 
 
 Application::Application()
@@ -37,4 +38,6 @@ void Application::run()
 
 		window.display();
 	}
+
+	delete game;
 }

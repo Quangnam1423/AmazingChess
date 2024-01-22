@@ -16,10 +16,6 @@ Engine::Engine(char turn, float sizeSquare)
 	this->checkmate = false;
 	this->selectedPiece = nullptr;
 	this->selectedSquare = nullptr;
-	BlackKingCoordinate.x = 3;
-	BlackKingCoordinate.y = 0;
-	WhiteKingCoordinate.x = 3;
-	WhiteKingCoordinate.y = 7;
 	for (int i = 0; i < 6; i++)
 	{
 		std::string notation = 'w' + this->paths[i];
@@ -102,103 +98,125 @@ void Engine::print(sf::RenderWindow& window)
 	}
 }
 
-void Engine::Completion(Square* clickedSquare)
+bool Engine::Completion(Square* clickedSquare)
 {
 	sf::Vector2i temp = clickedSquare->getCoordinate();
-	bool check = true;
+	bool check = false;
 	for (sf::Vector2i x : this->PossibleMove)
-	{
 		if (x == temp)
 		{
-			check = false;
+			check = true;
+			break;
 		}
-	}
-	if (!check)
-	{
-		this->selectedSquare->setPiece(nullptr);
-		clickedSquare->setPiece(this->selectedPiece);
-		sf::Vector2i newCoord = this->selectedPiece->getCoordinate();
-		sf::Vector2i oldCoord = this->selectedSquare->getCoordinate();
-		std::string trunggian = config[newCoord.y][newCoord.x];
-		config[newCoord.y][newCoord.x] = config[oldCoord.y][oldCoord.x];
-		config[oldCoord.y][oldCoord.x] = "--";
-		if (this->selectedPiece->getNotation() == 'k')
-		{
-			// swap to piece and two config in the board chess 
-
-			if (this->turn == 'b')
-			{
-				this->BlackKingCoordinate.x = newCoord.x;
-				this->BlackKingCoordinate.y = newCoord.y;
-			}
-			else
-			{
-				this->WhiteKingCoordinate.x = newCoord.x;
-				this->WhiteKingCoordinate.y = newCoord.y;
-			}
-		}
-		if (this->turn == 'w')
-			this->turn = 'b';
-		else
-			this->turn = 'w';
-	}
-	this->fillHighlight(false);
-	this->PossibleMove.clear();
-	this->selectedPiece = nullptr;
-	this->selectedSquare = nullptr;
+	if (check == false)
+		return false;
+	this->selectedSquare->setPiece(nullptr);
+	clickedSquare->setPiece(this->selectedPiece);
+	sf::Vector2i newCoord = this->selectedPiece->getCoordinate();
+	sf::Vector2i oldCoord = this->selectedSquare->getCoordinate();
+	std::string trunggian = config[newCoord.y][newCoord.x];
+	config[newCoord.y][newCoord.x] = config[oldCoord.y][oldCoord.x];
+	config[oldCoord.y][oldCoord.x] = "--";
+	return true;
 }
 
 void Engine::handleClicked(sf::Vector2i MousePosition)
 {
 	Square* clickedSquare = this->getSquareFromMouse(MousePosition);
-	if (clickedSquare != nullptr)
+	Piece* clickedPiece = clickedSquare->getPiece();
+	if (clickedSquare == nullptr)
 	{
-		if (this->selectedPiece != nullptr)
+		this->reset();
+		return;
+	}
+	if (this->selectedPiece == nullptr)
+	{
+		if (clickedPiece == nullptr)
 		{
-			this->Completion(clickedSquare);
+			this->reset();
+			return;
+		}
+		else if (clickedPiece->getColor() == this->turn)
+		{
+			this->selectedPiece = clickedPiece;
+			this->selectedSquare = clickedSquare;
+			this->PossibleMove = this->selectedPiece->getPossibleMove(this->config);
+			this->PossibleMove = this->getValidMove();
+			this->fillHighlight(true);
+			if (this->PossibleMove.size() == 0)
+			{
+				this->reset();
+				return;
+			}
+			// setup for choose piece Valid..................
 		}
 		else
 		{
-			this->selectedPiece = clickedSquare->getPiece();
-			if (this->selectedPiece != nullptr && this->selectedPiece->getColor() == this->turn)
-			{
-				this->selectedSquare = clickedSquare;
-				this->PossibleMove = this->selectedPiece->getPossibleMove(this->config);
-				//this->PossibleMove = this->getValidMove();
-				this->fillHighlight(true);
-			}
-			else
-			{
-				this->selectedPiece = nullptr;
-				std::cout << "nullptr" << std::endl;
-			}
+			this->reset();
+			return;
 		}
 	}
 	else
 	{
-		this->fillHighlight(false);
-		this->PossibleMove.clear();
-		this->selectedPiece = nullptr;
-		this->selectedSquare = nullptr;
+		if (clickedPiece == this->selectedPiece)
+			return;
+		else
+		{
+			bool value = this->Completion(clickedSquare);
+			if (value)
+			{
+				if (this->turn == 'w')
+					this->turn = 'b';
+				else
+					this->turn = 'w';
+			}
+			this->reset();
+			return;
+		}
 	}
+
 }
 
 bool Engine::Is_In_Check()
 {
-	std::unordered_set<sf::Vector2i , Vector2iHash> Coord;
-	for (Square* x : Squares)
+	std::vector<sf::Vector2i> coords;
+	sf::Vector2i KingCoord = sf::Vector2i(-1 , -1);
+	std::string notation;
+	if (this->turn == 'w')
+		notation = "wk";
+	else
+		notation = "bk";
+	for (int i = 0; i < 8; i++)
+	{
+		if (KingCoord.x != -1)
+			break;
+		for (int j = 0; j < 8; j++)
+		{
+			if (this->config[i][j] == notation)
+			{
+				KingCoord.x = j;
+				KingCoord.y = i;
+				break;
+			}
+		}
+	}
+	for (Square* x : this->Squares)
 	{
 		if (x->getPiece() != nullptr && x->getPiece()->getColor() != this->turn)
 		{
 			std::vector<sf::Vector2i> possibleMove = x->getPiece()->getPossibleMove(this->config);
-			Coord.insert(possibleMove.begin(), possibleMove.end());
+			for (sf::Vector2i coord : possibleMove)
+			{
+				coords.push_back(coord);
+			}
 		}
 	}
-	if (this->turn == 'w' && Coord.find(this->WhiteKingCoordinate) != Coord.end())
-		return true;
-	if (this->turn == 'b' && Coord.find(this->BlackKingCoordinate) != Coord.end())
-		return true;
-	return false;
+	for (sf::Vector2i coord : coords)
+	{
+		if (coord == KingCoord)
+			return false;
+	}
+	return true;
 }
 
 std::vector<sf::Vector2i> Engine::getValidMove()
@@ -222,7 +240,9 @@ bool Engine::checkValidMove(sf::Vector2i oldSquareCoord, sf::Vector2i newSquareC
 	std::string tempConfig = this->config[newSquareCoord.y][newSquareCoord.x];
 	newSquare->setPiece(oldSquare->getPiece());
 	oldSquare->setPiece(nullptr);
+	this->config[newSquareCoord.y][newSquareCoord.x] = this->config[oldSquareCoord.y][oldSquareCoord.x];
 	this->config[oldSquareCoord.y][oldSquareCoord.x] = "--";
+
 	bool output = this->Is_In_Check();
 	this->config[oldSquareCoord.y][oldSquareCoord.x] = this->config[newSquareCoord.y][newSquareCoord.x];
 	this->config[newSquareCoord.y][newSquareCoord.x] = tempConfig;
@@ -231,7 +251,7 @@ bool Engine::checkValidMove(sf::Vector2i oldSquareCoord, sf::Vector2i newSquareC
 	return output;
 }
 
-void Engine::fillHighlight(bool value) // fill highlight squares for each move...
+void Engine::fillHighlight(bool value)
 {
 	if (value)
 	{
@@ -252,11 +272,20 @@ void Engine::fillHighlight(bool value) // fill highlight squares for each move..
 	return;
 }
 
+void Engine::reset()
+{
+	this->fillHighlight(false);
+	this->PossibleMove.clear();
+	this->selectedPiece = nullptr;
+	this->selectedSquare = nullptr;
+	return;
+}
+
 Piece* getNewPiece(std::string notation, sf::Vector2i coordinate, float size, sf::Texture* texture)
 {
 	if (notation == "--")
 		return nullptr;
-	else if (notation == "wr" || notation == "br")
+	if (notation == "wr" || notation == "br")
 		return new Rook(notation, coordinate, size, texture);
 	else if (notation == "wn" || notation == "bn")
 		return new Knight(notation, coordinate, size, texture);
@@ -268,5 +297,6 @@ Piece* getNewPiece(std::string notation, sf::Vector2i coordinate, float size, sf
 		return new Queen(notation, coordinate, size, texture);
 	else if (notation == "wp" || notation == "bp")
 		return new Pawn(notation, coordinate, size, texture);
+	return nullptr;
 }
 

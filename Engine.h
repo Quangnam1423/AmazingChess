@@ -20,8 +20,9 @@ public:
 	bool checkValidMove(sf::Vector2i oldSquare, sf::Vector2i newSquare);
 	std::vector<sf::Vector2i> getValidMove();
 	void handleClicked(sf::Vector2i MousePosition);
+	void reset();
 	char getTurn();
-	void Completion(Square* clickedSquare);
+	bool Completion(Square* clickedSquare);
 	void fillHighlight(bool value);
 	std::unordered_map<std::string, sf::Texture*> map_Texture;
 	std::string paths[6] = { "r" , "n" , "b" , "k" , "q" , "p" };
@@ -43,7 +44,6 @@ private:
 	char turn;
 	std::vector<sf::Vector2i> PossibleMove;
 	std::vector<Square*> Squares;
-	sf::Vector2i BlackKingCoordinate, WhiteKingCoordinate;
 	bool checkmate;
 	float SquareSize;
 };
