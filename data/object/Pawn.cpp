@@ -6,7 +6,7 @@ Pawn::Pawn(std::string notation, sf::Vector2i coordinate, float size, sf::Textur
 
 }
 
-std::vector <sf::Vector2i> Pawn::getPossibleMove(std::string (*config)[8])
+std::vector <sf::Vector2i> Pawn::getPossibleMove(std::string config[][8] , Engine *game)
 {
 	std::vector<sf::Vector2i> output;
 	if (this->color == 'w')

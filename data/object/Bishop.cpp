@@ -6,7 +6,7 @@ Bishop::Bishop(std::string notation, sf::Vector2i coordinate, float size, sf::Te
 
 }
 
-std::vector<sf::Vector2i> Bishop::getPossibleMove(std::string config[][8])
+std::vector<sf::Vector2i> Bishop::getPossibleMove(std::string config[][8] , Engine *game)
 {
 	std::vector<sf::Vector2i> output;
 	for (int i = 1; i < 8; i++)

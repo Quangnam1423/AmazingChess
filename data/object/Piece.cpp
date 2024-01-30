@@ -1,4 +1,5 @@
 #include "Piece.h"
+#include "Engine.h"
 
 Piece::Piece(std::string notation, sf::Vector2i coordinate, float size, sf::Texture *texture)
 {
@@ -54,4 +55,9 @@ char Piece::getColor()
 char Piece::getNotation()
 {
 	return this->notation;
+}
+
+bool Piece::getStatus()
+{
+	return this->hasMove;
 }

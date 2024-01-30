@@ -7,7 +7,7 @@ Knight::Knight(std::string notation, sf::Vector2i coordinate, float size, sf::Te
 
 }
 
-std::vector<sf::Vector2i> Knight::getPossibleMove(std::string config[][8])
+std::vector<sf::Vector2i> Knight::getPossibleMove(std::string config[][8] , Engine *game)
 {
 	std::vector<sf::Vector2i> output;
 	int x = this->coordinate.x;

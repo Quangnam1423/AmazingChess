@@ -17,6 +17,7 @@ public:
 	Square* getSquareFromMouse(sf::Vector2i MousePosition);
 	Square* getSquareFromCoord(sf::Vector2i Coordinate);
 	bool Is_In_Check();
+	bool Is_In_Check(int x , int y);
 	bool checkValidMove(sf::Vector2i oldSquare, sf::Vector2i newSquare);
 	std::vector<sf::Vector2i> getValidMove();
 	void handleClicked(sf::Vector2i MousePosition);
@@ -36,9 +37,10 @@ public:
 		{"wp" , "wp" , "wp" , "wp" , "wp" , "wp" , "wp" , "wp"},
 		{"wr" , "wn" , "wb" , "wk" , "wq" , "wb" , "wn" , "wr"}
 	};
-	void print(sf::RenderWindow& window);
-private:
+	void print(sf::RenderWindow& window);	
 
+private:
+	Engine* game;
 	Square* selectedSquare;
 	Piece* selectedPiece;
 	char turn;

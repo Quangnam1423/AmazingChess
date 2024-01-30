@@ -7,7 +7,7 @@ Queen::Queen(std::string notation, sf::Vector2i coordinate, float size, sf::Text
 
 }
 
-std::vector<sf::Vector2i> Queen::getPossibleMove(std::string config[][8])
+std::vector<sf::Vector2i> Queen::getPossibleMove(std::string config[][8] , Engine *game)
 {
 	std::vector<sf::Vector2i> output;
 	int x = this->coordinate.x;

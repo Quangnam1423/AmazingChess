@@ -16,6 +16,7 @@ Engine::Engine(char turn, float sizeSquare)
 	this->checkmate = false;
 	this->selectedPiece = nullptr;
 	this->selectedSquare = nullptr;
+	this->game = this;
 	for (int i = 0; i < 6; i++)
 	{
 		std::string notation = 'w' + this->paths[i];
@@ -117,6 +118,8 @@ bool Engine::Completion(Square* clickedSquare)
 	std::string trunggian = config[newCoord.y][newCoord.x];
 	config[newCoord.y][newCoord.x] = config[oldCoord.y][oldCoord.x];
 	config[oldCoord.y][oldCoord.x] = "--";
+
+	// handle the castle if that move happens   
 	return true;
 }
 
@@ -140,7 +143,7 @@ void Engine::handleClicked(sf::Vector2i MousePosition)
 		{
 			this->selectedPiece = clickedPiece;
 			this->selectedSquare = clickedSquare;
-			this->PossibleMove = this->selectedPiece->getPossibleMove(this->config);
+			this->PossibleMove = this->selectedPiece->getPossibleMove(this->config , this->game);
 			this->PossibleMove = this->getValidMove();
 			this->fillHighlight(true);
 			if (this->PossibleMove.size() == 0)
@@ -204,7 +207,7 @@ bool Engine::Is_In_Check()
 	{
 		if (x->getPiece() != nullptr && x->getPiece()->getColor() != this->turn)
 		{
-			std::vector<sf::Vector2i> possibleMove = x->getPiece()->getPossibleMove(this->config);
+			std::vector<sf::Vector2i> possibleMove = x->getPiece()->getPossibleMove(this->config , this->game);
 			for (sf::Vector2i coord : possibleMove)
 			{
 				coords.push_back(coord);
@@ -214,6 +217,30 @@ bool Engine::Is_In_Check()
 	for (sf::Vector2i coord : coords)
 	{
 		if (coord == KingCoord)
+			return false;
+	}
+	return true;
+}
+
+bool Engine::Is_In_Check(int x, int y)
+{
+	sf::Vector2i position(x, y);
+	std::vector<sf::Vector2i> coords;
+
+	for (Square* x : this->Squares)
+	{
+		if (x->getPiece() != nullptr && x->getPiece()->getColor() != this->turn)
+		{
+			std::vector<sf::Vector2i> possibleMove = x->getPiece()->getPossibleMove(this->config, this->game);
+			for (sf::Vector2i coord : possibleMove)
+			{
+				coords.push_back(coord);
+			}
+		}
+	}
+	for (sf::Vector2i coord : coords)
+	{
+		if (coord == position)
 			return false;
 	}
 	return true;

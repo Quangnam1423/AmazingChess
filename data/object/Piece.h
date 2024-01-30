@@ -4,6 +4,8 @@
 #define PIECE_H
 #include <SFML/Graphics.hpp>
 
+class Engine;
+
 class Piece
 {
 public:
@@ -16,7 +18,8 @@ public:
 	void setPosition(sf::Vector2i newPosition);
 	char getColor();
 	char getNotation();
-	virtual std::vector<sf::Vector2i> getPossibleMove(std::string config[][8]) = 0;
+	bool getStatus();
+	virtual std::vector<sf::Vector2i> getPossibleMove(std::string config[][8] , Engine *game) = 0;
 
 protected:
 	char notation;
