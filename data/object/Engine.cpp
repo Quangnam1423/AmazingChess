@@ -9,6 +9,8 @@ struct Vector2iHash {
 	}
 };
 
+
+
 Engine::Engine(char turn, float sizeSquare)
 {
 	this->turn = turn;
@@ -51,6 +53,8 @@ Engine::Engine(char turn, float sizeSquare)
 	}
 }
 
+
+
 Engine::~Engine()
 {
 	for (Square* x : Squares)
@@ -58,6 +62,8 @@ Engine::~Engine()
 		delete x;
 	}
 }
+
+
 
 Square* Engine::getSquareFromMouse(sf::Vector2i MousePosition)
 {
@@ -73,6 +79,8 @@ Square* Engine::getSquareFromMouse(sf::Vector2i MousePosition)
 	return nullptr;
 }
 
+
+
 Square* Engine::getSquareFromCoord(sf::Vector2i Coordinate)
 {
 	for (Square* x : this->Squares)
@@ -85,10 +93,14 @@ Square* Engine::getSquareFromCoord(sf::Vector2i Coordinate)
 	return nullptr;
 }
 
+
+
 char Engine::getTurn()
 {
 	return this->turn;
 }
+
+
 
 void Engine::print(sf::RenderWindow& window)
 {
@@ -98,8 +110,11 @@ void Engine::print(sf::RenderWindow& window)
 	}
 }
 
+
+
 bool Engine::Completion(Square* clickedSquare)
 {
+	Piece* removePiece = clickedSquare->getPiece();
 	sf::Vector2i temp = clickedSquare->getCoordinate();
 	bool check = false;
 	for (sf::Vector2i x : this->PossibleMove)
@@ -110,6 +125,25 @@ bool Engine::Completion(Square* clickedSquare)
 		}
 	if (check == false)
 		return false;
+
+	// handle the passen happening 
+
+	if (this->selectedPiece->getNotation() == 'p')
+	{
+		if (clickedSquare->getPiece() == nullptr)
+		{
+			sf::Vector2i selectedpos = this->selectedSquare->getCoordinate();
+			sf::Vector2i clickedpos = clickedSquare->getCoordinate();
+			if (selectedpos.x != clickedpos.x && selectedpos.y != clickedpos.y)
+			{
+				sf::Vector2i passen_pos(clickedpos.x, selectedpos.y);
+				Square* temp = this->getSquareFromCoord(passen_pos);
+				temp->setPiece(nullptr);
+				this->config[selectedpos.y][clickedpos.x] = "--";
+			}
+		}
+	}
+
 	this->selectedSquare->setPiece(nullptr);
 	clickedSquare->setPiece(this->selectedPiece);
 	sf::Vector2i newCoord = this->selectedPiece->getCoordinate();
@@ -144,9 +178,14 @@ bool Engine::Completion(Square* clickedSquare)
 			this->config[newCoord.y][0] = "--";
 		}
 	}
+	if (removePiece != nullptr)
+		delete removePiece;
 	// already handle the castle
 	return true;
 }
+
+
+
 
 void Engine::handleClicked(sf::Vector2i MousePosition)
 {
@@ -202,8 +241,11 @@ void Engine::handleClicked(sf::Vector2i MousePosition)
 			return;
 		}
 	}
-
+	return;
 }
+
+
+
 
 bool Engine::Is_In_Check()
 {
@@ -247,6 +289,8 @@ bool Engine::Is_In_Check()
 	return true;
 }
 
+
+
 bool Engine::Is_In_Check(int x, int y)
 {
 	sf::Vector2i position(x, y);
@@ -271,6 +315,8 @@ bool Engine::Is_In_Check(int x, int y)
 	return true;
 }    
 
+
+
 std::vector<sf::Vector2i> Engine::getValidMove()
 {
 	std::vector<sf::Vector2i> output;
@@ -283,6 +329,8 @@ std::vector<sf::Vector2i> Engine::getValidMove()
 	}
 	return output;
 }
+
+
 
 bool Engine::checkValidMove(sf::Vector2i oldSquareCoord, sf::Vector2i newSquareCoord)
 {
@@ -302,6 +350,8 @@ bool Engine::checkValidMove(sf::Vector2i oldSquareCoord, sf::Vector2i newSquareC
 	newSquare->setPiece(tempPiece , false);
 	return output;
 }
+
+
 
 void Engine::fillHighlight(bool value)
 {
@@ -324,6 +374,8 @@ void Engine::fillHighlight(bool value)
 	return;
 }
 
+
+
 void Engine::reset()
 {
 	this->fillHighlight(false);
@@ -332,6 +384,8 @@ void Engine::reset()
 	this->selectedSquare = nullptr;
 	return;
 }
+
+
 
 Piece* getNewPiece(std::string notation, sf::Vector2i coordinate, float size, sf::Texture* texture)
 {
