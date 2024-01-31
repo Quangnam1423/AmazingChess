@@ -52,7 +52,7 @@ std::vector <sf::Vector2i> Pawn::getPossibleMove(std::string config[][8] , Engin
 		}
 		if (this->hasMove == false)
 		{
-			y += 1;
+			y = y + 1;
 			if (config[y][x] == "--")
 			{
 				output.push_back(sf::Vector2i(x, y));

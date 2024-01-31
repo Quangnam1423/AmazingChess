@@ -67,7 +67,6 @@ Square* Engine::getSquareFromMouse(sf::Vector2i MousePosition)
 	{
 		if (MousePosition == x->getCoordinate())
 		{
-			std::cout << MousePosition.x << " " << MousePosition.y << std::endl;
 			return x;
 		}
 	}
@@ -119,7 +118,33 @@ bool Engine::Completion(Square* clickedSquare)
 	config[newCoord.y][newCoord.x] = config[oldCoord.y][oldCoord.x];
 	config[oldCoord.y][oldCoord.x] = "--";
 
-	// handle the castle if that move happens   
+	// handle the castle if that move happens  
+	if (this->selectedPiece->getNotation() == 'k')
+	{
+		if (newCoord.x - oldCoord.x == 2)
+		{
+			sf::Vector2i rookPos(7, newCoord.y);
+			sf::Vector2i new_rookPos(newCoord.x - 1, newCoord.y);
+			Square* rook = this->getSquareFromCoord(rookPos);
+			Square* new_rook = this->getSquareFromCoord(new_rookPos);
+			new_rook->setPiece(rook->getPiece());
+			rook->setPiece(nullptr);
+			this->config[newCoord.y][newCoord.x - 1] = this->config[newCoord.y][7];
+			this->config[newCoord.y][7] = "--";
+		}
+		else if (oldCoord.x - newCoord.x == 2)
+		{
+			sf::Vector2i rookPos(0, newCoord.y);
+			sf::Vector2i new_rookPos(newCoord.x + 1, newCoord.y);
+			Square* rook = this->getSquareFromCoord(rookPos);
+			Square* new_rook = this->getSquareFromCoord(new_rookPos);
+			new_rook->setPiece(rook->getPiece());
+			rook->setPiece(nullptr);
+			this->config[newCoord.y][newCoord.x + 1] = this->config[newCoord.y][0];
+			this->config[newCoord.y][0] = "--";
+		}
+	}
+	// already handle the castle
 	return true;
 }
 
@@ -244,7 +269,7 @@ bool Engine::Is_In_Check(int x, int y)
 			return false;
 	}
 	return true;
-}
+}    
 
 std::vector<sf::Vector2i> Engine::getValidMove()
 {
@@ -265,16 +290,16 @@ bool Engine::checkValidMove(sf::Vector2i oldSquareCoord, sf::Vector2i newSquareC
 	Square* oldSquare = this->getSquareFromCoord(oldSquareCoord);
 	Piece* tempPiece = newSquare->getPiece();
 	std::string tempConfig = this->config[newSquareCoord.y][newSquareCoord.x];
-	newSquare->setPiece(oldSquare->getPiece());
-	oldSquare->setPiece(nullptr);
+	newSquare->setPiece(oldSquare->getPiece() , false);
+	oldSquare->setPiece(nullptr , false);
 	this->config[newSquareCoord.y][newSquareCoord.x] = this->config[oldSquareCoord.y][oldSquareCoord.x];
 	this->config[oldSquareCoord.y][oldSquareCoord.x] = "--";
 
 	bool output = this->Is_In_Check();
 	this->config[oldSquareCoord.y][oldSquareCoord.x] = this->config[newSquareCoord.y][newSquareCoord.x];
 	this->config[newSquareCoord.y][newSquareCoord.x] = tempConfig;
-	oldSquare->setPiece(newSquare->getPiece());
-	newSquare->setPiece(tempPiece);
+	oldSquare->setPiece(newSquare->getPiece() , false);
+	newSquare->setPiece(tempPiece , false);
 	return output;
 }
 

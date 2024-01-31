@@ -47,11 +47,11 @@ Piece* Square::getPiece()
 	return this->currentPiece;
 }
 
-void Square::setPiece(Piece* newPiece)
+void Square::setPiece(Piece* newPiece , bool value)
 {
 	this->currentPiece = newPiece;
 	if (this->currentPiece != nullptr)
-		newPiece->setCoordinate(this->coordinate);
+		newPiece->setCoordinate(this->coordinate , value);
 }
 
 void Square::setCoordinate(sf::Vector2i coordinate)

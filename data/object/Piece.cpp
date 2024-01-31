@@ -30,9 +30,9 @@ sf::Vector2i Piece::getCoordinate()
 	return this->coordinate;
 }
 
-void Piece::setCoordinate(sf::Vector2i newCoordinate)
+void Piece::setCoordinate(sf::Vector2i newCoordinate , bool value)
 {
-	this->hasMove = true;
+	if (value)this->hasMove = true;
 	this->coordinate = newCoordinate;
 	this->sprite.setPosition(this->coordinate.x * this->size, this->coordinate.y * this->size);
 }

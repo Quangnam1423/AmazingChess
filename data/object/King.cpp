@@ -39,11 +39,10 @@ std::vector<sf::Vector2i> King::getPossibleMove(std::string config[][8] , Engine
 			}
 		}
 	}
-	if (this->hasMove == false && this->color == game->getTurn())
+	if (this->hasMove == false && this->color == game->getTurn() && game->Is_In_Check())
 	{
 		if (config[this->coordinate.y][0][0] == this->color && config[this->coordinate.y][0][1] == 'r')
 		{
-			std::cout << "yes" << std::endl;
 			bool check = true;
 			sf::Vector2i rook_pos(0, this->coordinate.y);
 			Square* leftrook = game->getSquareFromCoord(rook_pos);
@@ -61,13 +60,11 @@ std::vector<sf::Vector2i> King::getPossibleMove(std::string config[][8] , Engine
 			if (check)
 			{
 				output.push_back(sf::Vector2i(this->coordinate.x - 2, this->coordinate.y));
-				std::cout << "yes\n";
 			}
 
 		}
 		if (config[this->coordinate.y][7][0] == this->color && config[this->coordinate.y][7][1] == 'r')
 		{
-			std::cout << "yes" << std::endl;
 			bool check = true;
 			sf::Vector2i rook_pos(7, this->coordinate.y);
 			Square* rightrook = game->getSquareFromCoord(rook_pos);
@@ -85,7 +82,6 @@ std::vector<sf::Vector2i> King::getPossibleMove(std::string config[][8] , Engine
 			if (check)
 			{
 				output.push_back(sf::Vector2i(this->coordinate.x + 2, this->coordinate.y));
-				std::cout << "yes" << std::endl;
 			}
 			
 		}

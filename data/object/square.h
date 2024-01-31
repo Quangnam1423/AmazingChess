@@ -11,7 +11,7 @@ public:
 	Square(Piece* piece , sf::Vector2i coordinate ,float size);
 	~Square();
 	Piece* getPiece();
-	void setPiece(Piece* newPiece);
+	void setPiece(Piece* newPiece , bool value = true);
 	void setCoordinate(sf::Vector2i coordinate);
 	sf::Vector2i getCoordinate();
 	void print(sf::RenderWindow& window);

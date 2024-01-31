@@ -13,7 +13,7 @@ public:
 	~Piece();
 	void print(sf::RenderWindow& window);
 	sf::Vector2i getCoordinate();
-	void setCoordinate(sf::Vector2i newCoordinate);
+	void setCoordinate(sf::Vector2i newCoordinate , bool value = true);
 	void setPosition(sf::Vector2f newPosition);
 	void setPosition(sf::Vector2i newPosition);
 	char getColor();
