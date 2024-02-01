@@ -20,11 +20,18 @@ public:
 	bool Is_In_Check(int x , int y);
 	bool checkValidMove(sf::Vector2i oldSquare, sf::Vector2i newSquare);
 	std::vector<sf::Vector2i> getValidMove();
+	std::vector<sf::Vector2i> getValidMove(Square* sq , std::vector<sf::Vector2i> input);
 	void handleClicked(sf::Vector2i MousePosition);
 	void reset();
 	char getTurn();
 	bool Completion(Square* clickedSquare);
+
+	void nextMoveSetup();
+
 	void fillHighlight(bool value);
+	void print(sf::RenderWindow& window);	
+
+private:
 	std::unordered_map<std::string, sf::Texture*> map_Texture;
 	std::string paths[6] = { "r" , "n" , "b" , "k" , "q" , "p" };
 	std::string config[8][8] = {
@@ -37,9 +44,6 @@ public:
 		{"wp" , "wp" , "wp" , "wp" , "wp" , "wp" , "wp" , "wp"},
 		{"wr" , "wn" , "wb" , "wk" , "wq" , "wb" , "wn" , "wr"}
 	};
-	void print(sf::RenderWindow& window);	
-
-private:
 	Engine* game;
 	Square* selectedSquare;
 	Piece* selectedPiece;
@@ -48,6 +52,7 @@ private:
 	std::vector<Square*> Squares;
 	bool checkmate;
 	float SquareSize;
+	int status;
 };
 
 #endif

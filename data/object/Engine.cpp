@@ -19,6 +19,7 @@ Engine::Engine(char turn, float sizeSquare)
 	this->selectedPiece = nullptr;
 	this->selectedSquare = nullptr;
 	this->game = this;
+	this->status = 0;
 	for (int i = 0; i < 6; i++)
 	{
 		std::string notation = 'w' + this->paths[i];
@@ -232,10 +233,11 @@ void Engine::handleClicked(sf::Vector2i MousePosition)
 			bool value = this->Completion(clickedSquare);
 			if (value)
 			{
-				if (this->turn == 'w')
-					this->turn = 'b';
-				else
-					this->turn = 'w';
+				//if (this->turn == 'w')
+				//	this->turn = 'b';
+				//else
+				//	this->turn = 'w';
+				this->nextMoveSetup();
 			}
 			this->reset();
 			return;
@@ -330,6 +332,19 @@ std::vector<sf::Vector2i> Engine::getValidMove()
 	return output;
 }
 
+std::vector<sf::Vector2i> Engine::getValidMove(Square* sq , std::vector<sf::Vector2i> input)
+{
+	std::vector<sf::Vector2i> output;
+	for (sf::Vector2i coord : input)
+	{
+		if (this->checkValidMove(sq->getCoordinate() , coord) == true)
+		{
+			output.push_back(coord);
+		}
+	}
+	return output;
+}
+
 
 
 bool Engine::checkValidMove(sf::Vector2i oldSquareCoord, sf::Vector2i newSquareCoord)
@@ -382,6 +397,45 @@ void Engine::reset()
 	this->PossibleMove.clear();
 	this->selectedPiece = nullptr;
 	this->selectedSquare = nullptr;
+	return;
+}
+
+void Engine::nextMoveSetup()
+{
+	if (this->turn == 'w')
+		this->turn = 'b';
+	else
+		this->turn = 'w';
+	bool check = false;
+	for (Square* sq : this->Squares)
+	{
+		Piece* temp = sq->getPiece();
+		if (temp != nullptr && temp->getColor() == this->turn)
+		{
+			if (temp->getNotation() == 'p')
+			{
+				Pawn* pawnptr = dynamic_cast<Pawn*> (temp);
+				pawnptr->update_DoubleMove(false);
+			}
+			std::vector<sf::Vector2i> moves = temp->getPossibleMove(this->config , this->game);
+			moves = this->getValidMove(sq , moves);
+			if (moves.size() != 0)
+				check = true;
+		}
+	}
+	if (!check)
+	{
+		if (this->turn == 'w')
+		{
+			this->status = -1;
+			std::cout << "black won!" << std::endl;
+		}
+		else
+		{
+			this->status = 1;
+			std::cout << "white won!" << std::endl;
+		}
+	}
 	return;
 }
 
