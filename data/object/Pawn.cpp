@@ -101,7 +101,7 @@ std::vector <sf::Vector2i> Pawn::getPossibleMove(std::string config[][8] , Engin
 				output.push_back(sf::Vector2i(x, y));
 		}
 		// bat tot qua song
-		if (config[coordinate.y][coordinate.x - 1] == "wp")
+		if (coordinate.x - 1 >= 0 && coordinate.x - 1 <= 7 && config[coordinate.y][coordinate.x - 1] == "wp")
 		{
 			Square* sq = game->getSquareFromCoord(sf::Vector2i(coordinate.x - 1, coordinate.y));
 			Piece* pi = sq->getPiece();
@@ -112,7 +112,7 @@ std::vector <sf::Vector2i> Pawn::getPossibleMove(std::string config[][8] , Engin
 			}
 		}
 
-		if (config[coordinate.y][coordinate.x + 1] == "wp")
+		if (coordinate.x + 1 >= 0 && coordinate.x + 1 <= 7 && config[coordinate.y][coordinate.x + 1] == "wp")
 		{
 			Square* sq = game->getSquareFromCoord(sf::Vector2i(coordinate.x + 1, coordinate.y));
 			Piece* pi = sq->getPiece();

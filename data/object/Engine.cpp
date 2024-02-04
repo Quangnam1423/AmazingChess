@@ -436,10 +436,12 @@ void Engine::nextMoveSetup()
 		if (this->turn == 'w')
 		{
 			this->status = -1;
+			std::cout << "black won!";
 		}
 		else
 		{
 			this->status = 1;
+			std::cout << "white won!";
 		}
 	}
 
@@ -454,13 +456,15 @@ void Engine::getStatus(std::string& st, bool &pro)
 
 void Engine::setPromotion(std::string notation)
 {
-	notation = notation + this->turn;
+	notation = this->turn + notation;
 	this->promotion = false;
 	Piece* newPiece = getNewPiece(notation, this->selectedPiece->getCoordinate(), this->SquareSize, map_Texture[notation]);
 	Square* sq = this->getSquareFromCoord(this->selectedPiece->getCoordinate());
-	delete this->selectedPiece;
-	this->selectedPiece = nullptr;
+	config[sq->getCoordinate().y][sq->getCoordinate().x] = notation;
 	sq->setPiece(newPiece);
+	if(this->selectedPiece != nullptr)
+		delete this->selectedPiece;
+
 	this->nextMoveSetup();
 	this->reset();
 	return;
