@@ -30,6 +30,7 @@
     <ClCompile Include="data\object\Rook.cpp" />
     <ClCompile Include="data\object\square.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Manager\TextBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -44,6 +45,10 @@
     <ClInclude Include="data\object\resource.h" />
     <ClInclude Include="data\object\Rook.h" />
     <ClInclude Include="data\object\square.h" />
+    <ClInclude Include="Manager\TextBox.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="data\TextFont\goodtime.otf" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

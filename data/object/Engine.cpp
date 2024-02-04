@@ -20,6 +20,7 @@ Engine::Engine(char turn, float sizeSquare)
 	this->selectedSquare = nullptr;
 	this->game = this;
 	this->status = 0;
+	promotion = false;
 	for (int i = 0; i < 6; i++)
 	{
 		std::string notation = 'w' + this->paths[i];
@@ -127,7 +128,6 @@ bool Engine::Completion(Square* clickedSquare)
 	if (check == false)
 		return false;
 
-	// handle the passen happening 
 
 	if (this->selectedPiece->getNotation() == 'p')
 	{
@@ -179,6 +179,12 @@ bool Engine::Completion(Square* clickedSquare)
 			this->config[newCoord.y][0] = "--";
 		}
 	}
+	else if (this->selectedPiece->getNotation() == 'p')
+	{
+		if (this->selectedPiece->getCoordinate().y == 7 || selectedPiece->getCoordinate().y == 0)
+			promotion = true;
+	}
+
 	if (removePiece != nullptr)
 		delete removePiece;
 	// already handle the castle
@@ -191,12 +197,12 @@ bool Engine::Completion(Square* clickedSquare)
 void Engine::handleClicked(sf::Vector2i MousePosition)
 {
 	Square* clickedSquare = this->getSquareFromMouse(MousePosition);
-	Piece* clickedPiece = clickedSquare->getPiece();
 	if (clickedSquare == nullptr)
 	{
 		this->reset();
 		return;
 	}
+	Piece* clickedPiece = clickedSquare->getPiece();
 	if (this->selectedPiece == nullptr)
 	{
 		if (clickedPiece == nullptr)
@@ -216,7 +222,7 @@ void Engine::handleClicked(sf::Vector2i MousePosition)
 				this->reset();
 				return;
 			}
-			// setup for choose piece Valid..................
+
 		}
 		else
 		{
@@ -233,13 +239,11 @@ void Engine::handleClicked(sf::Vector2i MousePosition)
 			bool value = this->Completion(clickedSquare);
 			if (value)
 			{
-				//if (this->turn == 'w')
-				//	this->turn = 'b';
-				//else
-				//	this->turn = 'w';
 				this->nextMoveSetup();
 			}
-			this->reset();
+
+			if (!promotion)
+				this->reset();
 			return;
 		}
 	}
@@ -402,6 +406,10 @@ void Engine::reset()
 
 void Engine::nextMoveSetup()
 {
+	if (promotion)
+		return;
+
+
 	if (this->turn == 'w')
 		this->turn = 'b';
 	else
@@ -417,8 +425,8 @@ void Engine::nextMoveSetup()
 				Pawn* pawnptr = dynamic_cast<Pawn*> (temp);
 				pawnptr->update_DoubleMove(false);
 			}
-			std::vector<sf::Vector2i> moves = temp->getPossibleMove(this->config , this->game);
-			moves = this->getValidMove(sq , moves);
+			std::vector<sf::Vector2i> moves = temp->getPossibleMove(this->config, this->game);
+			moves = this->getValidMove(sq, moves);
 			if (moves.size() != 0)
 				check = true;
 		}
@@ -428,14 +436,33 @@ void Engine::nextMoveSetup()
 		if (this->turn == 'w')
 		{
 			this->status = -1;
-			std::cout << "black won!" << std::endl;
 		}
 		else
 		{
 			this->status = 1;
-			std::cout << "white won!" << std::endl;
 		}
 	}
+
+	return;
+}
+
+void Engine::getStatus(std::string& st, bool &pro)
+{
+	st = this->status;
+	pro = this->promotion;
+}
+
+void Engine::setPromotion(std::string notation)
+{
+	notation = notation + this->turn;
+	this->promotion = false;
+	Piece* newPiece = getNewPiece(notation, this->selectedPiece->getCoordinate(), this->SquareSize, map_Texture[notation]);
+	Square* sq = this->getSquareFromCoord(this->selectedPiece->getCoordinate());
+	delete this->selectedPiece;
+	this->selectedPiece = nullptr;
+	sq->setPiece(newPiece);
+	this->nextMoveSetup();
+	this->reset();
 	return;
 }
 

@@ -48,6 +48,9 @@
     <ClCompile Include="data\object\square.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Manager\TextBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -86,5 +89,11 @@
     <ClInclude Include="data\object\square.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Manager\TextBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="data\TextFont\goodtime.otf" />
   </ItemGroup>
 </Project>

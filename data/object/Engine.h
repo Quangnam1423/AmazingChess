@@ -28,6 +28,11 @@ public:
 
 	void nextMoveSetup();
 
+	void getStatus(std::string& st, bool &pro);
+
+
+	void setPromotion(std::string notation);
+
 	void fillHighlight(bool value);
 	void print(sf::RenderWindow& window);	
 
@@ -53,6 +58,7 @@ private:
 	bool checkmate;
 	float SquareSize;
 	int status;
+	bool promotion;
 };
 
 #endif
