@@ -41,8 +41,9 @@ The sfml library is made of five module
   
 ## RUN  
   
-clone this repository:  
-> `cd .\AmazingChess`  
-> `.\AmazingChess.sln`  
+clone this repository and just run:
+
+    cd .\AmazingChess  
+    \AmazingChess.sln
 ......................  
 This game still lacks many features and therefore needs further development!!!  
