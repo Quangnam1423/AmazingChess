@@ -4,7 +4,7 @@ This is small **chess game** built with **sfml library**
 
 You need install sfml library first. [Here](https://www.sfml-dev.org/download.php).    
 Link header files and .lib files follow this tutorial.[Here](https://www.sfml-dev.org/tutorials/2.6/start-vc.php)    
-The sfml library is made of five module  
+The sfml library is made of five module:  
 > - sfml-system  
 > - sfml-graphics 
 > - sfml-window 
