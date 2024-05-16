@@ -12,31 +12,29 @@ The sfml library is made of five module
 > - ""sfml-audio""
 
 
-#include <SFML/Graphics.hpp>
-
-int main()
-{
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-
-    while (window.isOpen())
+    #include <SFML/Graphics.hpp>
+    int main()
     {
-        sf::Event event;
-        while (window.pollEvent(event))
+        sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+        sf::CircleShape shape(100.f);
+        shape.setFillColor(sf::Color::Green);
+    
+        while (window.isOpen())
         {
-            if (event.type == sf::Event::Closed)
-                window.close();
+            sf::Event event;
+            while (window.pollEvent(event))
+            {
+                if (event.type == sf::Event::Closed)
+                    window.close();
+            }
+    
+            window.clear();
+            window.draw(shape);
+            window.display();
         }
-
-        window.clear();
-        window.draw(shape);
-        window.display();
+    
+        return 0;
     }
-
-    return 0;
-}
-`
 > Run this code to verify if the setup is successful!!!  
   
   
