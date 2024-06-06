@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+#Dependencies lib and include headers
+/SFML/
+
+#Denpendencies .dll files
+*.dll
+
 # User-specific files
 *.rsuser
 *.suo
